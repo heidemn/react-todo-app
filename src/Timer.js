@@ -1,61 +1,79 @@
 import React from 'react';
 
 class Timer extends React.Component {
-    constructor(props) {
-      super(props);
-      this.state = {
-          seconds: 0,
-          running: false
-      };
-      this.startStop = this.startStop.bind(this);
-    }
-  
-    tick() {
-      this.setState(state => ({
-        seconds: state.seconds + 1
-      }));
-    }
-  
-    componentDidMount() {
-      this.interval = setInterval(() => this.tick(), 1000);
-      
-      this.setState(state => ({
-        seconds: state.seconds,
-        running: true
-      }));
+  constructor(props) {
+    super(props);
+    this.state = {
+      seconds: 0,
+      running: false
+    };
+    this.startStopTimer = this.startStopTimer.bind(this);
+    this.interval = undefined;
+  }
+
+  tick() {
+    this.setState((state, props) => ({
+      seconds: state.seconds + (props.increment || 1)
+    }));
+  }
+
+  componentDidMount() {
+    this.startTimer();
+  }
+
+  componentWillUnmount() {
+    this.stopTimer();
+  }
+
+  startTimer() {
+    if (this.interval) {
+      return;
     }
 
-    componentWillUnmount() {
-        clearInterval(this.interval);
+    this.interval = setInterval(() => this.tick(), 1000);
+    this.setState((state, props) => ({
+      running: true
+    }));
+    console.log('Started');
+  }
+
+  stopTimer() {
+    if (!this.interval) {
+      return;
     }
 
-    startStop() {
-        if (this.state.running) {
-            clearInterval(this.interval);
-        } else {
-            this.interval = setInterval(() => this.tick(), 1000);
-        }
-        this.setState(state => ({
-            seconds: state.seconds,
-            running: !state.running
-        }));
-        console.log('Start/stop');
-    }
+    clearInterval(this.interval);
+    this.interval = undefined;
 
-    startStopText() {
-        return this.state.running ? 'Stop' : 'Start';
+    this.setState((state, props) => ({
+      running: false
+    }));
+    console.log('Stopped');
+  }  
+
+  startStopTimer() {
+    if (this.interval) {
+      this.stopTimer();
+    } else {
+      this.startTimer();
     }
-    
-    render() {
-        return (
-            <div>
-                Seconds: {this.state.seconds} <
-                button onClick={this.startStop}>
-                    {this.startStopText()}
-                </button>
-            </div>
-        );
-    }
+  }
+
+  startStopText() {
+    return this.interval ? 'Stop' : 'Start';
+    //return this.state.running ? 'Stop' : 'Start';
+  }
+
+  render() {
+    return (
+      <div>
+        Seconds: {this.state.seconds} <
+          button onClick={this.startStopTimer}>
+          {this.startStopText()}
+        </button>
+      </div>
+    );
+  }
 }
 
 export default Timer;
