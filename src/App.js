@@ -1,5 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
+import Hello from './Hello'
+import Timer from './Timer'
 
 function App() {
   return (
@@ -7,7 +9,7 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-          Edit <code>src/App.js</code> and save to reload.
+          Edit <code>src/App.js</code> and save to reloaddd.
         </p>
         <a
           className="App-link"
@@ -17,6 +19,9 @@ function App() {
         >
           Learn React
         </a>
+
+        <Hello name="john" />
+        <Timer></Timer>
       </header>
     </div>
   );
