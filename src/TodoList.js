@@ -40,20 +40,29 @@ class TodoList extends React.Component {
   }
 
   addTodo() {
-    this.setState((state, props) => ({
-      todoList: [{
-        id: state.newTodoId,
-        text: state.newTodoText,
-        done: false
-      }].concat(state.todoList),
-      newTodoId: state.newTodoId + 1
-    }));
+    this.setState((state, props) => {
+      const text = state.newTodoText.trim();
+      if (!text) {
+        return {};
+      }
+
+      return {
+        todoList: [{
+          id: state.newTodoId,
+          text: state.newTodoText,
+          done: false
+        }].concat(state.todoList),
+        newTodoId: state.newTodoId + 1,
+        newTodoText: ''
+      };
+    });
     this.save();
   }
 
   updateNewTodoText(event) {
     this.setState({newTodoText: event.target.value});
-    console.log({newTodoText: event.target.value});
+    //console.log({newTodoText: event.target.value});
+    this.save();
   }
 
   render() {
@@ -65,10 +74,28 @@ class TodoList extends React.Component {
         this.save();
       }
 
+      let check = () => {
+        console.log('Check', todo.text);
+        this.setState((state, props) => ({
+          todoList: state.todoList.map((td) => {
+            if (td !== todo) {
+              return td;
+            }
+
+            return {
+              id: td.id,
+              text: td.text,
+              value: !td.value
+            };
+          })
+        }));
+        this.save();
+      };
+
       return (
         <div key={todo.id} style={{display: "block"}}>
           <label>
-            <input type="checkbox"></input>
+            <input type="checkbox" defaultChecked={todo.value} onChange={check}></input>
             {todo.text}
           </label>&nbsp;
           <button onClick={del}>✗</button>
@@ -80,7 +107,7 @@ class TodoList extends React.Component {
       <div style={{textAlign: "left"}}>
         <div>
           <button onClick={this.addTodo}>+</button>
-          <input onChange={this.updateNewTodoText}></input>
+          <input value={this.state.newTodoText} onChange={this.updateNewTodoText}></input>
         </div>
         {todos}
       </div>
