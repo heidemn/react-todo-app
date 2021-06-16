@@ -1,3 +1,8 @@
+# React ToDo App
+
+Just learning React by building another ToDo app.  
+The ToDos are persisted to the browser's localStorage.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
